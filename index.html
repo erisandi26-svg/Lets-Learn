@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Angka Penting - Pembelajaran Fisika</title>
+    <!-- Memuat Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- HAPUS skrip React dan ReactDOM -->
+    
+    <!-- Ganti lucide-react dengan lucide.min.js (versi non-React) -->
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+    
+    <!-- Font Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap" rel="stylesheet">
+
+    <style>
+        /* Mengatur font default */
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+
+        /* Menambahkan warna kustom */
+        :root {
+            --color-green: #A6FF96;
+            --color-pink: #FFA1F5;
+            --color-purple: #BC7AF9;
+        }
+        .bg-custom-green { background-color: var(--color-green); }
+        .bg-custom-pink { background-color: var(--color-pink); }
+        .bg-custom-purple { background-color: var(--color-purple); }
+        
+        .text-custom-green { color: var(--color-green); }
+        .text-custom-pink { color: var(--color-pink); }
+        .text-custom-purple { color: var(--color-purple); }
+        
+        .border-custom-green { border-color: var(--color-green); }
+        .border-custom-pink { border-color: var(--color-pink); }
+        .border-custom-purple { border-color: var(--color-purple); }
+
+        /* Menyembunyikan halaman */
+        .page {
+            display: none;
+        }
+        .page.active {
+            display: flex;
+        }
+
+        /* Styling untuk 3D Logo (CSS Cube) */
+        .scene {
+            width: 100px;
+            height: 100px;
+            perspective: 400px;
+            margin: 2rem auto;
+        }
+        .cube {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            transform-style: preserve-3d;
+            transform: rotateX(-30deg) rotateY(-45deg);
+            animation: rotateCube 12s infinite linear;
+        }
+        .cube__face {
+            position: absolute;
+            width: 100px;
+            height: 100px;
+            border: 2px solid #334155;
+            background: rgba(166, 255, 150, 0.7);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            font-weight: 900;
+            color: #334155;
+            backdrop-filter: blur(5px);
+        }
+        .cube__face--front  { transform: rotateY(  0deg) translateZ(50px); }
+        .cube__face--right  { transform: rotateY( 90deg) translateZ(50px); }
+        .cube__face--back   { transform: rotateY(180deg) translateZ(50px); }
+        .cube__face--left   { transform: rotateY(-90deg) translateZ(50px); }
+        .cube__face--top    { transform: rotateX( 90deg) translateZ(50px); }
+        .cube__face--bottom { transform: rotateX(-90deg) translateZ(50px); }
+
+        @keyframes rotateCube {
+            from { transform: rotateX(-30deg) rotateY(-45deg); }
+            to   { transform: rotateX(-30deg) rotateY(315deg); }
+        }
+
+        /* Notifikasi Kuis */
+        #notification-toast {
+            position: fixed;
+            bottom: -100px;
+            left: 50%;
+            transform: translateX(-50%);
+            padding: 1rem 2rem;
+            border-radius: 0.5rem;
+            font-weight: 600;
+            box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1);
+            transition: bottom 0.5s ease-in-out;
+            z-index: 50;
+        }
+        #notification-toast.show {
+            bottom: 2rem;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 text-gray-800">
+
+    <!-- Container Utama -->
+    <div class="min-h-screen w-full flex flex-col items-center justify-center p-4">
+
+        <!-- Halaman 1: Splash/Judul -->
+        <div id="page-splash" class="page active w-full max-w-lg mx-auto">
+            <div class="bg-custom-green w-full rounded-2xl shadow-2xl p-8 md:p-12 text-center text-gray-800">
+                
+                <!-- Logo 3D -->
+                <div class="scene">
+                    <div class="cube">
+                        <div class="cube__face cube__face--front">1.0</div>
+                        <div class="cube__face cube__face--right">20</div>
+                        <div class="cube__face cube__face--back">0.5</div>
+                        <div class="cube__face cube__face--left">?</div>
+                        <div class="cube__face cube__face--top">3</div>
+                        <div class="cube__face cube__face--bottom">AP</div>
+                    </div>
+                </div>
+
+                <h1 class="text-4xl md:text-5xl font-black uppercase tracking-wider">
+                    Angka Penting
+                </h1>
+                <p class="mt-2 text-lg font-semibold">
+                    desain by Pak Fadli
+                </p>
+                <button 
+                    onclick="showPage('page-home')"
+                    class="mt-10 bg-gray-800 text-white font-bold py-3 px-8 rounded-lg shadow-lg transform transition-transform duration-200 hover:scale-105 focus:outline-none focus:ring-2 focus:ring-gray-800 focus:ring-opacity-50">
+                    Masuk ke Menu Home
+                </button>
+            </div>
+        </div>
+
+        <!-- Halaman 2: Home -->
+        <div id="page-home" class="page w-full max-w-lg mx-auto text-center">
+            <h2 class="text-3xl font-bold mb-8">Menu Utama</h2>
+            <div class="space-y-6">
+                <!-- Menu Aturan -->
+                <div 
+                    onclick="showPage('page-materi')"
+                    class="bg-custom-pink w-full rounded-2xl shadow-xl p-8 cursor-pointer transform transition-transform duration-300 hover:shadow-2xl hover:-translate-y-2">
+                    <!-- Ganti div dengan tag <i> untuk Lucide -->
+                    <i data-lucide="book-text" class="w-16 h-16 mx-auto mb-4 text-gray-800" stroke-width="1.5"></i>
+                    <h3 class="text-2xl font-bold text-gray-800">Aturan Angka Penting</h3>
+                </div>
+                
+                <!-- Menu Latihan -->
+                <div 
+                    onclick="showPage('page-kuis-intro')"
+                    class="bg-custom-purple w-full rounded-2xl shadow-xl p-8 cursor-pointer transform transition-transform duration-300 hover:shadow-2xl hover:-translate-y-2">
+                    <!-- Ganti div dengan tag <i> untuk Lucide -->
+                    <i data-lucide="clipboard-check" class="w-16 h-16 mx-auto mb-4 text-white" stroke-width="1.5"></i>
+                    <h3 class="text-2xl font-bold text-white">Latihan Soal</h3>
+                </div>
+            </div>
+            <button 
+                onclick="showPage('page-splash')"
+                class="mt-10 bg-gray-600 text-white font-semibold py-2 px-6 rounded-lg shadow-md hover:bg-gray-700 transition-colors duration-200">
+                Kembali ke Halaman Utama
+            </button>
+        </div>
+
+        <!-- Halaman 3: Materi -->
+        <div id="page-materi" class="page w-full max-w-2xl mx-auto">
+            <div class="bg-white rounded-2xl shadow-xl p-6 md:p-10">
+                <h2 class="text-3xl font-bold mb-6 text-custom-pink border-b-4 border-custom-pink pb-2">
+                    Aturan Angka Penting
+                </h2>
+                <div class="space-y-4 text-gray-700 text-base md:text-lg leading-relaxed">
+                    <p class="font-semibold">1. Semua angka bukan nol adalah angka penting (AP).</p>
+                    <ul class="list-disc list-inside pl-4 bg-gray-50 p-4 rounded-lg">
+                        <li>47,5 cm <span class="font-bold text-pink-600">= 3 AP</span></li>
+                        <li>41,27 gram <span class="font-bold text-pink-600">= 4 AP</span></li>
+                        <li>4,2685 kg <span class="font-bold text-pink-600">= 5 AP</span></li>
+                        <li>156,25 m <span class="font-bold text-pink-600">= 5 AP</span></li>
+                        <li>112567 km <span class="font-bold text-pink-600">= 6 AP</span></li>
+                    </ul>
+
+                    <p class="font-semibold">2. Angka nol yang terletak di antara dua angka bukan nol adalah angka penting.</p>
+                    <ul class="list-disc list-inside pl-4 bg-gray-50 p-4 rounded-lg">
+                        <li>20,5 m <span class="font-bold text-pink-600">= 3 AP</span></li>
+                        <li>10,07 kg <span class="font-bold text-pink-600">= 4 AP</span></li>
+                        <li>300,004 cm <span class="font-bold text-pink-600">= 6 AP</span></li>
+                    </ul>
+
+                    <p class="font-semibold">3. Angka nol di sebelah kanan angka bukan nol tanpa tanda desimal (koma) adalah bukan angka penting, kecuali diberi tanda khusus (garis bawah).</p>
+                    <ul class="list-disc list-inside pl-4 bg-gray-50 p-4 rounded-lg">
+                        <li>5000 m <span class="font-bold text-pink-600">= 1 AP</span></li>
+                        <li>120000 kg <span class="font-bold text-pink-600">= 2 AP</span></li>
+                        <li>1<span class="underline">0</span>00 m <span class="font-bold text-pink-600">= 2 AP</span></li>
+                    </ul>
+                    
+                    <p class="font-semibold">4. Angka nol di sebelah kanan tanda desimal dan di sebelah kanan angka bukan nol adalah angka penting.</p>
+                    <ul class="list-disc list-inside pl-4 bg-gray-50 p-4 rounded-lg">
+                        <li>5,0 cm <span class="font-bold text-pink-600">= 2 AP</span></li>
+                        <li>2,500 m <span class="font-bold text-pink-600">= 4 AP</span></li>
+                        <li>10,0 m <span class="font-bold text-pink-600">= 3 AP</span></li>
+                    </ul>
+                    
+                    <p class="font-semibold">5. Angka nol di sebelah kiri angka bukan nol, baik di sebelah kiri maupun kanan desimal, adalah bukan angka penting.</p>
+                    <ul class="list-disc list-inside pl-4 bg-gray-50 p-4 rounded-lg">
+                        <li>0,5 m <span class="font-bold text-pink-600">= 1 AP</span></li>
+                        <li>0,0025 kg <span class="font-bold text-pink-600">= 2 AP</span></li>
+                        <li>0,0105 cm <span class="font-bold text-pink-600">= 3 AP</span></li>
+                    </ul>
+                    
+                    <p class="font-semibold">6. Notasi Ilmiah. Angka pada notasi ilmiah adalah angka penting.</p>
+                    <ul class="list-disc list-inside pl-4 bg-gray-50 p-4 rounded-lg">
+                        <li>2,5 x 10<sup>4</sup> m <span class="font-bold text-pink-600">= 2 AP</span></li>
+                        <li>1,70 x 10<sup>-5</sup> kg <span class="font-bold text-pink-600">= 3 AP</span></li>
+                    </ul>
+                </div>
+                <button 
+                    onclick="showPage('page-home')"
+                    class="mt-8 bg-gray-600 text-white font-semibold py-2 px-6 rounded-lg shadow-md hover:bg-gray-700 transition-colors duration-200">
+                    Kembali ke Menu
+                </button>
+            </div>
+        </div>
+
+        <!-- Halaman 4: Kuis Intro -->
+        <div id="page-kuis-intro" class="page w-full max-w-lg mx-auto">
+            <div class="bg-white rounded-2xl shadow-xl p-8 text-center">
+                <h2 class="text-3xl font-bold mb-6 text-custom-purple">Mulai Kuis</h2>
+                <div class="space-y-4">
+                    <div>
+                        <label for="nama-kelompok" class="block text-left font-semibold mb-1">Nama Kelompok</label>
+                        <input type="text" id="nama-kelompok" class="w-full px-4 py-2 border-2 border-gray-300 rounded-lg focus:border-custom-purple focus:ring-1 focus:ring-custom-purple" placeholder="Contoh: Kelompok 1">
+                    </div>
+                    <div>
+                        <label for="kelas" class="block text-left font-semibold mb-1">Kelas</label>
+                        <input type="text" id="kelas" class="w-full px-4 py-2 border-2 border-gray-300 rounded-lg focus:border-custom-purple focus:ring-1 focus:ring-custom-purple" placeholder="Contoh: X MIPA 1">
+                    </div>
+                </div>
+                <button 
+                    id="start-quiz-btn"
+                    onclick="startQuiz()"
+                    class="mt-8 bg-custom-purple text-white font-bold py-3 px-10 rounded-lg shadow-lg transform transition-transform duration-200 hover:scale-105">
+                    Mulai Kuis
+                </button>
+                <button 
+                    onclick="showPage('page-home')"
+                    class="mt-4 block mx-auto text-gray-600 font-semibold py-2 px-6">
+                    Batal
+                </button>
+            </div>
+        </div>
+
+        <!-- Halaman 5: Kuis Aktif -->
+        <div id="page-kuis-active" class="page w-full max-w-2xl mx-auto">
+            <div class="bg-white rounded-2xl shadow-xl p-6 md:p-10 w-full">
+                <div class="flex justify-between items-center mb-6">
+                    <h2 class="text-2xl font-bold text-custom-purple">Latihan Soal</h2>
+                    <div id="question-counter" class="text-lg font-semibold bg-gray-200 px-4 py-1 rounded-full">
+                        Soal 1/10
+                    </div>
+                </div>
+                
+                <p id="question-text" class="text-xl font-semibold mb-6 min-h-[6rem]">
+                    Memuat soal...
+                </p>
+                
+                <div id="options-container" class="space-y-4">
+                    <!-- Opsi jawaban akan di-generate oleh JS -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Halaman 6: Hasil Kuis -->
+        <div id="page-kuis-hasil" class="page w-full max-w-lg mx-auto">
+            <div class="bg-white rounded-2xl shadow-xl p-8 text-center">
+                <h2 class="text-3xl font-bold mb-6">Hasil Kuis</h2>
+                <div class="space-y-4 text-lg">
+                    <div class="flex justify-between bg-green-100 p-4 rounded-lg">
+                        <span class="font-semibold">Jumlah Soal Benar:</span>
+                        <span id="correct-count" class="font-bold text-green-600">0</span>
+                    </div>
+                    <div class="flex justify-between bg-red-100 p-4 rounded-lg">
+                        <span class="font-semibold">Jumlah Soal Salah:</span>
+                        <span id="wrong-count" class="font-bold text-red-600">0</span>
+                    </div>
+                    <div class="flex justify-between bg-blue-100 p-4 rounded-lg">
+                        <span class="font-semibold">Total Nilai:</span>
+                        <span id="total-score" class="font-bold text-blue-600 text-2xl">0</span>
+                    </div>
+                </div>
+                
+                <p class="mt-8 font-semibold text-gray-700 bg-yellow-100 border-l-4 border-yellow-500 p-4 rounded-r-lg">
+                    Silakan lakukan screenshot halaman ini sebagai bukti pengerjaan!
+                </p>
+
+                <button 
+                    onclick="showPage('page-splash')"
+                    class="mt-8 bg-gray-800 text-white font-bold py-3 px-8 rounded-lg shadow-lg transform transition-transform duration-200 hover:scale-105">
+                    Kembali ke Halaman Awal
+                </button>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Notifikasi Toast -->
+    <div id="notification-toast">
+        <span id="notification-text"></span>
+    </div>
+
+
+    <script>
+        // --- Data Kuis ---
+        const quizData = [
+            {
+                question: "Bilangan 356 memiliki berapa angka penting?",
+                options: ["1", "2", "3", "4", "5"],
+                answer: "3"
+            },
+            {
+                question: "Dalam bilangan 987654, jumlah angka pentingnya adalah ...",
+                options: ["3", "4", "5", "6", "7"],
+                answer: "6"
+            },
+            {
+                question: "Berapa jumlah angka penting pada bilangan 0,00520 km?",
+                options: ["2", "3", "4", "5", "6"],
+                answer: "3" // 5, 2, dan 0 di kanan
+            },
+            {
+                question: "Bilangan 200,8 gram memiliki ... angka penting.",
+                options: ["1", "2", "3", "4", "5"],
+                answer: "4" // 0 di antara non-nol
+            },
+            {
+                question: "Sebuah truk memiliki massa 5000 kg. Berapa angka penting pada bilangan tersebut?",
+                options: ["1", "2", "3", "4", "Bisa 1, 2, 3, atau 4"],
+                answer: "1" // Trailing zero tanpa desimal
+            },
+            {
+                question: "Jika pengukuran ditulis sebagai 5000, (dengan koma desimal), berapa angka pentingnya?",
+                options: ["1", "2", "3", "4", "5"],
+                answer: "4" // Trailing zero dengan desimal
+            },
+            {
+                question: "Berapa angka penting pada bilangan 1,20 x 10³ m?",
+                options: ["1", "2", "3", "4", "5"],
+                answer: "3" // Notasi ilmiah
+            },
+            {
+                question: "Hasil dari 12,5 cm + 1,23 cm menurut aturan angka penting adalah ...",
+                options: ["13,73 cm", "13,7 cm", "14 cm", "13,730 cm", "13 cm"],
+                answer: "13,7 cm" // Pembulatan ke 1 angka desimal
+            },
+            {
+                question: "Hasil dari 2,5 m x 3,0 m menurut aturan angka penting adalah ...",
+                options: ["7,50 m²", "8 m²", "7,5 m²", "7,0 m²", "7 m²"],
+                answer: "7,5 m²" // Hasil harus 2 AP
+            },
+            {
+                question: "Jumlah angka penting dalam bilangan eksak, seperti '10 siswa' atau '5 kali putaran', adalah ...",
+                options: ["1", "2", "Tergantung jumlah nol", "Tak terhingga", "Tidak ada"],
+                answer: "Tak terhingga"
+            }
+        ];
+
+        // --- State Aplikasi ---
+        let currentQuestionIndex = 0;
+        let score = 0;
+        let correctAnswers = 0;
+        let wrongAnswers = 0;
+        let currentActivePage = 'page-splash';
+
+        const pages = document.querySelectorAll('.page');
+        const questionText = document.getElementById('question-text');
+        const optionsContainer = document.getElementById('options-container');
+        const questionCounter = document.getElementById('question-counter');
+        const toast = document.getElementById('notification-toast');
+        const toastText = document.getElementById('notification-text');
+
+        // --- Fungsi Navigasi ---
+        function showPage(pageId) {
+            const newPage = document.getElementById(pageId);
+            if (newPage) {
+                pages.forEach(page => {
+                    page.classList.remove('active');
+                });
+                newPage.classList.add('active');
+                currentActivePage = pageId;
+            }
+        }
+
+        // --- Fungsi Kuis ---
+        function startQuiz() {
+            const nama = document.getElementById('nama-kelompok').value;
+            const kelas = document.getElementById('kelas').value;
+
+            if (nama.trim() === "" || kelas.trim() === "") {
+                alert("Harap isi Nama Kelompok dan Kelas terlebih dahulu."); // Menggunakan alert di sini diperbolehkan untuk validasi form
+                return;
+            }
+
+            // Reset state
+            currentQuestionIndex = 0;
+            score = 0;
+            correctAnswers = 0;
+            wrongAnswers = 0;
+
+            showPage('page-kuis-active');
+            loadQuestion();
+        }
+
+        function loadQuestion() {
+            // Mengaktifkan kembali pilihan
+            optionsContainer.classList.remove('pointer-events-none');
+            
+            if (currentQuestionIndex >= quizData.length) {
+                showResults();
+                return;
+            }
+
+            const currentQuestion = quizData[currentQuestionIndex];
+            questionText.textContent = currentQuestion.question;
+            questionCounter.textContent = `Soal ${currentQuestionIndex + 1}/${quizData.length}`;
+            
+            optionsContainer.innerHTML = ''; // Kosongkan opsi sebelumnya
+
+            currentQuestion.options.forEach(option => {
+                const button = document.createElement('button');
+                button.textContent = option;
+                button.classList.add('w-full', 'text-left', 'p-4', 'bg-gray-100', 'rounded-lg', 'font-semibold', 'transition-colors', 'duration-200', 'hover:bg-custom-purple', 'hover:text-white', 'border-2', 'border-transparent', 'focus:border-custom-purple', 'focus:outline-none');
+                button.onclick = () => selectAnswer(option, currentQuestion.answer);
+                optionsContainer.appendChild(button);
+            });
+        }
+
+        function selectAnswer(selectedOption, correctAnswer) {
+            // Menonaktifkan pilihan agar tidak diklik ganda
+            optionsContainer.classList.add('pointer-events-none');
+
+            if (selectedOption === correctAnswer) {
+                correctAnswers++;
+                score += 10;
+                showNotification(true, "Jawaban Benar! 🎉");
+            } else {
+                wrongAnswers++;
+                showNotification(false, `Jawaban Salah. Yang benar: ${correctAnswer} 😢`);
+            }
+
+            // Tunggu notifikasi selesai, baru lanjut
+            setTimeout(() => {
+                currentQuestionIndex++;
+                loadQuestion();
+            }, 2000); // 2 detik
+        }
+
+        function showNotification(isCorrect, message) {
+            toastText.textContent = message;
+            if (isCorrect) {
+                toast.classList.add('bg-green-500', 'text-white');
+                toast.classList.remove('bg-red-500');
+            } else {
+                toast.classList.add('bg-red-500', 'text-white');
+                toast.classList.remove('bg-green-500');
+            }
+            
+            toast.classList.add('show');
+
+            // Sembunyikan notifikasi setelah 1.5 detik
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 1500);
+        }
+
+        function showResults() {
+            document.getElementById('correct-count').textContent = correctAnswers;
+            document.getElementById('wrong-count').textContent = wrongAnswers;
+            document.getElementById('total-score').textContent = score;
+            showPage('page-kuis-hasil');
+        }
+
+        // --- Inisialisasi Ikon ---
+        window.onload = () => {
+            // Ganti metode inisialisasi ikon
+            if (typeof lucide !== 'undefined') {
+                // Panggil createIcons() untuk mengganti semua tag <i> dengan data-lucide
+                lucide.createIcons();
+            } else {
+                console.error("Lucide library not loaded.");
+            }
+            
+            // Set halaman awal
+            showPage('page-splash');
+        };
+
+    </script>
+</body>
+</html>
+
